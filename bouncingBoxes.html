@@ -1,0 +1,53 @@
+<html>
+<body>
+	<canvas id="canvas" width="1200" height="900"></canvas>
+	<script>
+        let canvas = document.getElementById("canvas");
+        let context = canvas.getContext("2d");
+        const NUM_POINTS = 700; 
+
+        const points = [];
+        const colors=['red','blue','green','grey','yellow'];
+
+        for(let i = 0; i < NUM_POINTS; i++) {
+            points.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                width: Math.random() * 20,
+                height: Math.random() * 20,
+                xDelta: 7,
+                yDelta: 7, 
+                color: colors[Math.floor(Math.random()*colors.length)]
+            });
+        }
+
+        const drawBox = function(point) {
+            context.beginPath();
+            context.rect(point.x,point.y,point.width,point.height);
+            context.fillStyle = point.color;
+            context.fill();
+            context.closePath();    
+        }
+
+        const draw = function() {
+            context.clearRect(0,0, canvas.width, canvas.height);
+            points.forEach(function(point){
+                drawBox(point);
+                if(point.x + point.xDelta > canvas.width-point.width || point.x + point.xDelta < 0) {
+                    point.xDelta = -point.xDelta;
+                }
+                if(point.y + point.yDelta > canvas.height-point.height || point.y + point.yDelta < 0) {
+                    point.yDelta = -point.yDelta;
+                }
+                point.x += point.xDelta;
+                point.y += point.yDelta;
+            });
+        };
+        let animate = function() {
+            draw();
+            setTimeout(animate, 10);
+        };
+        animate();
+    </script>
+</body>
+</html>
